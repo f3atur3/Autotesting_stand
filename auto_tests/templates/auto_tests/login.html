@@ -1,0 +1,12 @@
+{% extends 'auto_tests/basic.html' %}
+
+{% block title %}Вход{% endblock %}
+
+{% block content %}
+    <h3 class="mb-5">Вход в систему</h3>
+    <form class="form mt-5" method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input class="btn btn-dark text-light" type="submit" value="Вход">
+    </form>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'auto_tests/basic.html' %}
+
+{% block title %}Результаты{% endblock %}
+
+{% block content %}
+    <h3>Результаты последнего запуска тестов</h3>
+    {% for cat, results in cats.items %}
+        <div class="ml-3">
+            <details class="card">
+                <summary class="card-header mb-3"><h5><i>{{cat}}</i></h5></summary>
+                <div class="card-body">
+                    {% for res in results %}
+                        <details class="card">
+                            <summary class="card-header mb-3">{{res.test_name}}</summary>
+                            <div class="card-body">
+                                {% if res.latest_result_passed is not None %}
+                                    <p class="ml-5 mb-1">Результат:
+                                        {% if res.latest_result_passed %}
+                                            <span class="text-success">Passed</span>
+                                        {% else %}
+                                            <span class="text-danger">Failed</span>
+                                        {% endif %}
+                                    </p>
+                                    {% if not res.latest_result_passed %}
+                                        <p class="ml-5 mb-1">Ошибка: {{res.latest_result_test_error}}</p>
+                                    {% endif %}
+                                    <p class="ml-5 mb-1">Время ожидания ответа от сервера: {{res.latest_result_server_timeout}}</p>
+                                    <p class="ml-5 mb-1">Дата: {{res.latest_result_date}}</p>
+                                {% else %}
+                                    <p class="ml-5 mb-1">Тест еще не был запущен</p>
+                                {% endif %}
+                                <div class="d-flex justify-content-end">
+                                    <a class="btn btn-dark text-light" href="{% url 'detail_result' res.pk %}">Подробнее</a>
+                                </div>
+                            </div>
+                        </details>
+                    {% endfor %}
+                </div>
+            </details>
+        </div>
+    {% endfor %}
+{% endblock %}

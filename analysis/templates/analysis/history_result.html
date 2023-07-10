@@ -1,0 +1,50 @@
+{% extends 'auto_tests/basic.html' %}
+
+{% block title %}История запусков теста "{{history_result.test_name}}"{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h3 class="card-header mb-3">Тест "{{history_result.test_name}}"</h3>
+        <div class="card-body">
+            <p class="ml-5 mb-1">Описание: {{history_result.test_description}}</p>
+            <p class="ml-5 mb-1">Тип: <a href="{% url 'test_types'%}">{{history_result.test_type}}</a></p>
+            <p class="ml-5 mb-1">Ожидаемое время ответа сервера: {{history_result.server_timeout}}</p>
+            <p class="ml-5 mb-3">Мета данные: <code class="code code-block">{{history_result.meta_data}}</code></p>
+            {% if history.0 is not None %}
+                <p class="ml-5 mb-3">Результаты запуска теста:</p>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">Результат</th>
+                            <th scope="col">Ошибка</th>
+                            <th scope="col">Время</th>
+                            <th scope="col">Дата</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for result in history%}
+                        <tr>
+                            <td>
+                                {% if result.passed %}
+                                    <span class="text-success">Passed</span>
+                                {% else %}
+                                    <span class="text-danger">Failed</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if not result.passed %}
+                                    {{result.test_error}}
+                                {% endif %}
+                            </td>
+                            <td>{{result.server_timeout}}</td>
+                            <td>{{result.date}}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="ml-5 mb-1">Тест еще не был запущен</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

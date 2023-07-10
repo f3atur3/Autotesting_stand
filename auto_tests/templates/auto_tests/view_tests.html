@@ -1,0 +1,90 @@
+{% extends 'auto_tests/basic.html' %}
+
+{% block title %} Результаты запуска тестов {% endblock %}
+
+{% block content %}
+    <h3>Результаты запуска тестов</h3>
+    <span id="status" class="mb-5"></span>
+    <div class="results-container mt-5">
+    </div>
+    <script>
+        $(document).ready(function() {
+            var tests = [{%for pk in pks%} {{pk}}, {% endfor %}];
+            var tests_names = [{%for name in names%} "{{name}}", {% endfor %}]
+
+            // Функция для обработки ответа сервера и добавления нового блока данных
+            function processData(data) {
+              // Создание нового блока данных
+              var newBlock = $('<details class="card"></details>');
+              
+              // Добавление значений полей в новый блок
+              newBlock.append('<summary class="card-header mb-3">Тест: ' + data.test + '</summary>');
+              var detBlock = $('<div class="card-body"></div>')
+              if (data.passed) {
+                detBlock.append('<p class="ml-5 mb-1">Статус: <span class="text-success">Passed</span></p>');
+              } else {
+                detBlock.append('<p class="ml-5 mb-1">Статус: <span class="text-danger">Failed</span></p>');
+              }
+              if (!data.passed) {
+                detBlock.append('<p class="ml-5 mb-1">Ошибка: ' + data.test_error + '</p>')
+              }
+              detBlock.append('<p class="ml-5 mb-1">Время ожидания ответа от сервера: ' + data.server_timeout + '</p>');
+              detBlock.append('<p class="ml-5 mb-1">Дата: ' + data.date + '</p>');
+
+              newBlock.append(detBlock)
+              
+              // Добавление нового блока в страницу
+              $('.results-container').append(newBlock);
+            }
+            function processError(data, test_name) {
+                var newBlock = $('<details class="card"></details>');
+                // Добавление значений полей в новый блок
+                newBlock.append('<summary class="card-header mb-3">Тест: ' + test_name + '</summary>');
+                var detBlock = $('<div class="card-body"></div>')
+                detBlock.append('<p class="ml-5 mb-1">Ошибка: ' + data + '</p>')
+                newBlock.append(detBlock)
+                // Добавление нового блока в страницу
+                $('.results-container').append(newBlock);
+            }
+            var count = 0;
+            $("#status").text("Работает " + count + "/" + tests.length);
+            function performAjaxRequest(index) {
+                $.ajax({
+                    url: "{% url 'results_test' 0 %}".replace(/0(?!.*0)/, tests[index]),
+                    type: 'GET',
+                    success: function(data) {
+                        // Обработка полученного результата теста
+                        count++;
+                        $("#status").text("Работает " + count + "/" + tests.length);
+                        processData(data);
+                        if (count == tests.length) {
+                            $("#status").text("Завершено.");
+                        }
+                        
+                        // Переход к следующей итерации
+                        if (index < tests.length - 1) {
+                            performAjaxRequest(index + 1);
+                        }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        count++;
+                        $("#status").text("Работает " + count + "/" + tests.length);
+                        if (count == tests.length) {
+                            $("#status").text("Завершено.");
+                        }
+                        processError(errorThrown, tests_names[index]);
+                        console.log('Ошибка:', errorThrown);
+                        
+                        // Переход к следующей итерации
+                        if (index < tests.length - 1) {
+                            performAjaxRequest(index + 1);
+                        }
+                    }
+                });
+            }
+            
+            // Запуск цикла
+            performAjaxRequest(0);
+        });
+    </script>
+{% endblock %}

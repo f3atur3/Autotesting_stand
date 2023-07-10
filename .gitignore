@@ -1,0 +1,27 @@
+# Игнорировать файлы отладки
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Игнорировать временные файлы
+*.bak
+*.swp
+*~
+*.DS_Store
+
+# Игнорировать файлы конфигурации
+*.env
+.env.local
+.env.*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Игнорировать файлы логов
+logs/
+*.log
+
+# Игнорировать виртуальное окружение Python
+venv/
+env/

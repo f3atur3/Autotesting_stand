@@ -1,0 +1,15 @@
+{% extends 'auto_tests/basic.html' %}
+
+{% block title %} Типы тестов {% endblock %}
+
+{% block content %}
+    <h3 class="mb-3">Типы тестов и их описания</h3>
+    {% for type in types %}
+        <details class="card">
+            <summary class="card-header mb-3">{{type.type_name}}</summary>
+            <div class="card-body">
+                <p class="ml-5 mb-1">Описание: {{type.type_discription|linebreaksbr}}</p>
+            </div>
+        </details>
+    {% endfor %}
+{% endblock %}

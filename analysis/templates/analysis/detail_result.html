@@ -1,0 +1,47 @@
+{% extends 'auto_tests/basic.html' %}
+
+{% block title %}Тест "{{detail_result.test_name}}"{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <h3 class="card-header mb-3">Тест "{{detail_result.test_name}}"</h3>
+        <div class="card-body">
+            <p class="ml-5 mb-1">Описание: {{detail_result.test_description}}</p>
+            <p class="ml-5 mb-1">Тип: <a href="{% url 'test_types'%}">{{detail_result.test_type}}</a></p>
+            <p class="ml-5 mb-1">Ожидаемое время ответа сервера: {{detail_result.server_timeout}}</p>
+            <p class="ml-5 mb-3">Мета данные: <code class="code code-block">{{detail_result.meta_data}}</code></p>
+            {% if last_result.0 is not None %}
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-9">
+                            <p class="ml-5 mb-1">Результаты последнего запуска:</p>
+                            <div class="ml-5">
+                                <p class="ml-5 mb-1">Результат:
+                                    {% if last_result.0.passed %}
+                                        <span class="text-success">Passed</span>
+                                    {% else %}
+                                        <span class="text-danger">Failed</span>
+                                    {% endif %}
+                                </p>
+                                {% if not last_result.0.passed %}
+                                    <p class="ml-5 mb-1">Ошибка: {{last_result.0.test_error}}</p>
+                                {% endif %}
+                                <p class="ml-5 mb-1">Время ожидания ответа от сервера: {{last_result.0.server_timeout}}</p>
+                                <p class="ml-5 mb-1">Дата: {{last_result.0.date}}</p>
+                                <img class="mb-3 img-fluid" src="data:image/png;base64,{{ graph_image }}" alt="Graph Image">
+                            </div>
+                        </div> 
+                        <div class="col">
+                            <div class="d-flex justify-content-end">
+                                <a class="btn btn-dark text-light" href="{% url 'history_result' detail_result.pk %}">История</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            {% else %}
+                    <p class="ml-5 mb-1">Тест еще не был запущен</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
