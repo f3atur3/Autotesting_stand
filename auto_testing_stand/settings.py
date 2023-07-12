@@ -23,9 +23,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v6+f429i=p-y$6o_=77saf)i5&wey#rn3_)5ttpqx61bp&r2a6'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+import os
+
+# Получаем IP-адрес устройства из переменной среды
+host_ip = os.environ.get('HOST_IP')
+
+# Добавляем IP-адрес устройства в список ALLOWED_HOSTS
+ALLOWED_HOSTS = [host_ip] if host_ip else []
 
 
 # Application definition

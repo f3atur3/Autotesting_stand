@@ -114,7 +114,6 @@ class DssClient:
         if document:
             document = os.path.join(self.__path, dir, document)
             document = self.file_to_bytes(document)
-            print(document)
         signature = os.path.join(self.__path, dir, signature)
         signature = self.file_to_bytes(signature)
         

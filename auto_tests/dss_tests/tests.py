@@ -5,10 +5,15 @@ import time
 import datetime
 import json
 import pytz
+import yaml
+
+with open("conf.yaml", "r") as file:
+    config_data: dict = yaml.safe_load(file)
+
 
 
 class CheckSignDocuments: 
-    client = DssClient("6720ryzhikov", "r6SZv2p4", "https://dss.linus.su", "http://qs.cryptopro.ru/tsp/tsp.srf")
+    client = DssClient(config_data.get("username", "6720ryzhikov"), config_data.get("password", "r6SZv2p4"), "https://dss.linus.su", "http://qs.cryptopro.ru/tsp/tsp.srf")
     
     __methods = {
         "pdf": client.sign_documents_pdf,
@@ -55,7 +60,7 @@ class CheckSignDocuments:
         
         
 class CheckVerifySignature:
-    client = DssClient("6720ryzhikov", "r6SZv2p4", "https://dss.linus.su", "http://qs.cryptopro.ru/tsp/tsp.srf")
+    client = DssClient(config_data.get("username", "6720ryzhikov"), config_data.get("password", "r6SZv2p4"), "https://dss.linus.su", "http://qs.cryptopro.ru/tsp/tsp.srf")
 
     __methods = {
         "pdf": client.verify_signature_pdf,
