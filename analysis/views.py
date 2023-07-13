@@ -70,19 +70,26 @@ class DeatailStreamResult(LoginRequiredMixin, DetailView):
         locale.setlocale(locale.LC_ALL, 'ru_RU.UTF-8')
         object = context['object']
         time.sleep(1)
-        if object.meta_data["type"] == "sign":
-            result = CheckSignDocuments(**object.meta_data, test=object).run()
-        elif object.meta_data["type"] == "verify":
-            result = CheckVerifySignature(**object.meta_data, test=object).run()
-        time.sleep(1)
-        # Сериализуйте объект в JSON
-        serialized_object = {
-            'test': result.test.__str__(),
-            'passed': result.passed,
-            'test_error': result.test_error,
-            'server_timeout': result.server_timeout.__str__(),
-            'date': result.date.strftime("%e %B %Y г. %H:%M"),
-        }
+        try:
+            if object.meta_data["type"] == "sign":
+                result = CheckSignDocuments(**object.meta_data, test=object).run()
+            elif object.meta_data["type"] == "verify":
+                result = CheckVerifySignature(**object.meta_data, test=object).run()
+            time.sleep(1)
+            # Сериализуйте объект в JSON
+            serialized_object = {
+                'test': result.test.__str__(),
+                'passed': result.passed,
+                'test_error': result.test_error,
+                'server_timeout': result.server_timeout.__str__(),
+                'date': result.date.strftime("%e %B %Y г. %H:%M"),
+            }
+        except Exception as ex:
+            serialized_object = {
+                'test': object.__str__(),
+                'passed': False,
+                'test_error': ex.__str__(),
+            }
         # Верните JSON-ответ
         return JsonResponse(serialized_object)
     

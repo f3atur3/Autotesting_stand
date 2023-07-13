@@ -1,6 +1,10 @@
 # Используем базовый образ Python
 FROM python:3.10
 
+# Устанавливаем переменные окружения для локали
+ENV LANG ru_RU.UTF-8
+ENV LC_ALL ru_RU.UTF-8
+
 # Устанавливаем переменную окружения для отключения вывода байт-кода Python
 ENV PYTHONDONTWRITEBYTECODE 1
 
@@ -24,6 +28,12 @@ COPY requirements.txt /app/
 
 # Устанавливаем зависимости
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Устанавливаем пакет locales и генерируем локаль ru_RU.UTF-8
+RUN apt-get update && apt-get install -y locales && \
+    sed -i -e 's/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/' /etc/locale.gen && \
+    dpkg-reconfigure --frontend=noninteractive locales && \
+    update-locale LANG=ru_RU.UTF-8
 
 # Запускаем команду для миграций и сбора статических файлов
 RUN python manage.py migrate
