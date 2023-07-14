@@ -12,13 +12,13 @@
 # Запуск готового образа без сборки
 ## Для запуска приложения необходимо авторизироваться:
 
-`docker login ghcr.io`
+`sudo docker login ghcr.io`
 
 где нужно ввести учетные данные GitHub (имя пользователя и персональный доступный токен), чтобы аутентифицироваться в GitHub Container Registry.
 
 ## Затем, чтобы скачать Docker-образ из GitHub Container Registry:
 
-`docker pull ghcr.io/f3atur3/autotesting_stand:latest`
+`sudo docker pull ghcr.io/f3atur3/autotesting_stand:latest`
 
 ## Для запуска:
 
