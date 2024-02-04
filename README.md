@@ -5,9 +5,7 @@
 
 ## Для запуска:
 
-`sudo docker run -e HOST_IP="192.168.0.100" -p 8000:8000 stand`
-
-где значение HOST_IP нужно заменить на ip адрес устройства
+`sudo docker run -p 8000:8000 stand`
 
 # Запуск готового образа без сборки
 ## Для запуска приложения необходимо авторизироваться:
@@ -22,6 +20,4 @@
 
 ## Для запуска:
 
-`sudo docker run -e HOST_IP="192.168.0.100" -p 8000:8000 ghcr.io/f3atur3/autotesting_stand:latest`
-
-где значение HOST_IP нужно заменить на ip адрес устройства
+`sudo docker run -p 8000:8000 ghcr.io/f3atur3/autotesting_stand:latest`
